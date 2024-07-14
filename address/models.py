@@ -90,7 +90,9 @@ def _to_python(value):
     # Handle the address.
     try:
         if not (street_number or route or locality):
-            address_obj = Address.objects.get(raw=raw)
+            address_obj = Address.objects.filter(raw=raw).first()
+            if not address_obj:
+                raise Address.DoesNotExist
         else:
             address_obj = Address.objects.filter(street_number=street_number, route=route, locality=locality_obj).first()
             if not address_obj:
